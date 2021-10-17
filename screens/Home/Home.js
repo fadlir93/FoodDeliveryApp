@@ -41,7 +41,7 @@ const Home = () => {
                 borderRadius: SIZES.radius,
                 backgroundColor: COLORS.lightGray2
             }}>
-            {/* icon */}
+            {/* icons */} 
                 <Image
                     source={icons.search}
                     style={{
