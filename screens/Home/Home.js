@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     View,
     Text,
@@ -8,10 +8,27 @@ import {
     FlatList
 } from 'react-native';
 import { FONTS, SIZES, COLORS, icons, dummyData} from '../../constants'
+import { HorizontalFoodCard } from '../../components';
 
 const Home = () => {
+    const [selectedCategoryId, setSelectedCategoryId] = useState(1)
+    const [selectedMenuType, setSelectedMenuType] = useState(1)
+    const [menuList, setMenuList] = useState([])
 
-    const randerSearch = () => {
+    useEffect(() => {
+        handleChangeCategory(selectedCategoryId, selectedMenuType)
+    }, [])
+
+    //handler
+    const handleChangeCategory = (categoryId, menuTypeId) => {
+        // Find the menu based on the menuTypeId
+        let selectedMenu = dummyData.menu.find(a => a.id === menuTypeId)
+
+        // Set the menu based on the categoryId
+        setMenuList(selectedMenu?.list?.filter(a => a.categories.includes(categoryId)))
+    }
+    
+    const renderSearch = () => {
         return (
             <View
             style={{
@@ -65,10 +82,34 @@ const Home = () => {
             }}
         >
             {/* Search */}
-                {randerSearch()}
+            {renderSearch()}
 
             {/* List */}
-
+            <FlatList
+                data={menuList}
+                keyExtractor={(item) => `${item.id}`}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                    console.log('items', item)
+                    return (
+                        <HorizontalFoodCard
+                            containerStyle={{
+                                height: 130,
+                                alignItems: 'center',
+                                marginHorizontal: SIZES.padding,
+                                marginBottom: SIZES.radius,
+                            }}
+                            imageStyle={{
+                                marginTop: 20,
+                                height: 110,
+                                width: 110
+                            }}
+                            item={item}
+                            onPress={() => console.log('horizontalFoodCard')}
+                        />
+                    )
+                }}
+            />
         </View>
     )
 }
